@@ -38,6 +38,7 @@ emacs_value Fdelete_lines;
 emacs_value Frecenter;
 emacs_value Fset_window_point;
 emacs_value Fpoint;
+emacs_value Ffind_file;
 
 emacs_value Fput_text_property;
 emacs_value Fset;
@@ -76,6 +77,7 @@ emacs_value get_buffer_window_list(emacs_env *env);
 emacs_value selected_window(emacs_env *env);
 void set_title(emacs_env *env, emacs_value string);
 void set_directory(emacs_env *env, emacs_value string);
+void find_file(emacs_env *env, emacs_value string);
 void vterm_invalidate(emacs_env *env);
 emacs_value vterm_get_color(emacs_env *env, int index);
 

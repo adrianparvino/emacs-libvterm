@@ -123,6 +123,10 @@ void set_directory(emacs_env *env, emacs_value string) {
   env->funcall(env, Fvterm_set_directory, 1, (emacs_value[]){string});
 }
 
+void find_file(emacs_env *env, emacs_value string) {
+  env->funcall(env, Ffind_file, 1, (emacs_value[]){string});
+}
+
 void vterm_invalidate(emacs_env *env) {
   env->funcall(env, Fvterm_invalidate, 0, NULL);
 }

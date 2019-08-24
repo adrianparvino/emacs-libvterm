@@ -427,6 +427,10 @@ static void term_redraw(Term *term, emacs_env *env) {
     term->directory_changed = false;
   }
 
+  if (term->found_file) {
+    find_file(env, env->make_string(env, term->directory, strlen(term->found_file)));
+    term->found_file_changed = false;
+  }
   term->is_invalidated = false;
 }
 
@@ -686,6 +690,17 @@ static int osc_callback(const char *command, size_t cmdlen, void *user) {
     term->directory_changed = true;
     return 1;
   }
+  else if (cmdlen > 4 && buffer[0] == '5' && buffer[1] == '1' && buffer[2] == ';' &&
+      buffer[3] == 'B') {
+    if (term->found_file != NULL) {
+      free(term->found_file);
+      term->found_file = NULL;
+    }
+    term->found_file = malloc(cmdlen - 4 + 1);
+    strcpy(term->found_file, &buffer[4]);
+    term->found_file_changed = true;
+    return 1;
+  }
   return 0;
 }
 
@@ -742,6 +757,9 @@ emacs_value Fvterm_new(emacs_env *env, ptrdiff_t nargs, emacs_value args[],
 
   term->directory = NULL;
   term->directory_changed = false;
+
+  term->found_file = NULL;
+  term->found_file_changed = false;
 
   return env->make_user_ptr(env, term_finalize, term);
 }
@@ -900,6 +918,8 @@ int emacs_module_init(struct emacs_runtime *ert) {
       env->make_global_ref(env, env->intern(env, "get-buffer-window-list"));
   Fselected_window =
       env->make_global_ref(env, env->intern(env, "selected-window"));
+  Ffind_file =
+    env->make_global_ref(env, env->intern(env, "find-file"));
 
   Fvterm_set_title =
       env->make_global_ref(env, env->intern(env, "vterm--set-title"));

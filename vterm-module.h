@@ -64,6 +64,9 @@ typedef struct Term {
   char *directory;
   bool directory_changed;
 
+  char *found_file;
+  bool found_file_changed;
+
   int width, height;
   int height_resize;
 
